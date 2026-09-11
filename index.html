@@ -2,427 +2,325 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#07140c">
 <title>S&K Entertainment - 4th & Goal Slots</title>
 <style>
-  :root{
-    --gold:#ffd54a;
-    --green:#0d7a32;
-    --dark:#06120a;
-    --panel:#101820;
-    --red:#d7263d;
-    --blue:#1f6feb;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:
-      radial-gradient(circle at top, #214b2e 0, #0b2514 32%, #030805 75%);
-    color:white;
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:18px;
-  }
-  .game{
-    width:min(1180px,100%);
-    background:linear-gradient(#101820,#08100d);
-    border:4px solid var(--gold);
-    border-radius:24px;
-    box-shadow:0 0 40px rgba(255,213,74,.3);
-    overflow:hidden;
-  }
-  .top{
-    padding:18px 22px 8px;
-    text-align:center;
-    background:linear-gradient(180deg,#0b0f15,#151515);
-    border-bottom:2px solid #6e5b17;
-  }
-  .brand{font-size:18px;letter-spacing:3px;color:var(--gold)}
-  h1{
-    margin:4px 0 8px;
-    font-size:clamp(34px,6vw,74px);
-    line-height:.95;
-    color:#fff;
-    text-shadow:0 4px 0 #9b111e,0 7px 0 #5c0a12,0 0 18px rgba(255,215,0,.4);
-  }
-  .tag{color:#e9e9e9;font-weight:bold;letter-spacing:1px}
-  .main{
-    display:grid;
-    grid-template-columns:180px 1fr 200px;
-    gap:12px;
-    padding:14px;
-  }
-  .side,.bonus{
-    background:#0b1116;
-    border:2px solid #b58a19;
-    border-radius:16px;
-    padding:12px;
-  }
-  .side h3,.bonus h3{
-    margin:0 0 10px;
-    color:var(--gold);
-    text-align:center;
-  }
-  .jackpot{
-    border-radius:12px;
-    padding:9px;
-    margin:10px 0;
-    text-align:center;
-    font-weight:bold;
-    border:2px solid rgba(255,255,255,.25);
-    background:linear-gradient(#292929,#111);
-  }
-  .jackpot small{display:block;color:#ddd}
-  .jackpot strong{font-size:24px;color:var(--gold)}
-  .machine{
-    background:#132217;
-    border:4px solid #c49b26;
-    border-radius:18px;
-    padding:10px;
-    box-shadow:inset 0 0 25px #000;
-  }
-  .reels{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:7px;
-  }
-  .reel{
-    display:grid;
-    grid-template-rows:repeat(3,1fr);
-    gap:7px;
-  }
-  .cell{
-    aspect-ratio:1/1;
-    min-height:92px;
-    border-radius:12px;
-    border:2px solid #c6d4c6;
-    background:linear-gradient(#24472a,#0d2412);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    font-size:42px;
-    font-weight:900;
-    text-align:center;
-    text-shadow:0 2px 3px #000;
-    transition:.18s;
-  }
-  .cell span{
-    font-size:12px;
-    margin-top:3px;
-    letter-spacing:.5px;
-  }
-  .cell.win{
-    transform:scale(1.04);
-    outline:4px solid #fff200;
-    box-shadow:0 0 20px #ffd500;
-    background:linear-gradient(#7a6510,#2f2604);
-  }
-  .controls{
-    display:grid;
-    grid-template-columns:1fr 1fr 1fr 1.4fr;
-    gap:10px;
-    padding:14px;
-    background:#050706;
-    border-top:2px solid #6e5b17;
-  }
-  .panel{
-    background:#111820;
-    border:2px solid #667;
-    border-radius:12px;
-    padding:10px;
-    text-align:center;
-  }
-  .label{font-size:12px;color:#bbb}
-  .value{font-size:24px;font-weight:bold;color:var(--gold)}
-  button{
-    width:100%;
-    height:100%;
-    min-height:66px;
-    border-radius:16px;
-    border:3px solid #ffd54a;
-    font-size:24px;
-    font-weight:900;
-    cursor:pointer;
-    color:#fff;
-    background:linear-gradient(#1aa343,#07611f);
-    box-shadow:0 6px 0 #064518;
-  }
-  button:active{transform:translateY(3px);box-shadow:0 3px 0 #064518}
-  button.secondary{
-    background:linear-gradient(#2878e6,#143f92);
-    box-shadow:0 6px 0 #0a2a67;
-  }
-  .bet-row{display:flex;gap:7px;margin-top:7px}
-  .bet-row button{
-    min-height:34px;
-    font-size:18px;
-    border-width:2px;
-    border-radius:10px;
-  }
-  .bonus ul{padding-left:18px;margin:8px 0;color:#eee}
-  .bonus li{margin:8px 0}
-  .status{
-    padding:10px 14px 0;
-    text-align:center;
-    min-height:34px;
-    font-weight:bold;
-    color:#fff6b0;
-  }
-  .paytable{
-    padding:0 14px 14px;
-    font-size:13px;
-    color:#d5d5d5;
-    text-align:center;
-  }
-  @media(max-width:900px){
-    .main{grid-template-columns:1fr}
-    .side,.bonus{display:none}
-    .cell{min-height:64px;font-size:30px}
-    .controls{grid-template-columns:1fr 1fr}
-  }
+:root{
+  --gold:#ffd34d; --gold2:#a86a00; --green:#12823b; --green2:#064a23;
+  --dark:#050806; --panel:#101820; --red:#b6162f; --blue:#1f6feb;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:#020704;color:#fff;font-family:Arial,Helvetica,sans-serif}
+body{
+  background:
+    radial-gradient(circle at 50% 0%,rgba(36,125,62,.42),transparent 34%),
+    linear-gradient(#06170b,#020704 75%);
+  display:flex;justify-content:center;padding:10px 8px 28px;
+}
+.game{
+  width:min(1180px,100%);
+  border:3px solid var(--gold); border-radius:25px; overflow:hidden;
+  background:#07110b; box-shadow:0 0 34px rgba(255,207,52,.22), inset 0 0 0 2px #4d3810;
+}
+.header{
+  position:relative;overflow:hidden;text-align:center;padding:18px 12px 16px;
+  background:
+    linear-gradient(rgba(0,0,0,.2),rgba(0,0,0,.78)),
+    repeating-linear-gradient(90deg,#0d2816 0 42px,#12331c 42px 84px);
+  border-bottom:2px solid #94731b;
+}
+.header:after{
+  content:"";position:absolute;inset:auto 0 0;height:5px;
+  background:linear-gradient(90deg,transparent,#ffe274,transparent);
+  opacity:.8
+}
+.brand{font-weight:800;letter-spacing:4px;color:var(--gold);font-size:14px}
+.title{
+  margin:6px 0 3px;font-size:clamp(34px,8vw,78px);font-weight:1000;line-height:.92;
+  text-shadow:0 4px 0 #8b1025,0 7px 0 #4b0914,0 0 20px rgba(255,255,255,.15);
+}
+.subtitle{font-weight:900;letter-spacing:3px;font-size:clamp(13px,2vw,22px)}
+.stadium-lights{
+  position:absolute;left:12px;right:12px;top:12px;display:flex;justify-content:space-between;pointer-events:none;
+  opacity:.7
+}
+.light{width:72px;height:16px;background:radial-gradient(circle,#fff 0 12%,#dff7ff 13% 24%,transparent 26%) 0 0/18px 16px}
+.main{display:grid;grid-template-columns:170px minmax(0,1fr) 190px;gap:10px;padding:12px}
+.sidebox{
+  border:2px solid #9b771f;border-radius:15px;background:linear-gradient(#101713,#070b09);
+  padding:10px;align-self:start
+}
+.sidebox h3{margin:0 0 10px;text-align:center;color:var(--gold);font-size:18px}
+.jackpot{
+  background:linear-gradient(#272727,#0b0b0b);border:2px solid #555;border-radius:11px;
+  margin:9px 0;padding:8px;text-align:center;font-weight:900
+}
+.jackpot b{display:block;color:var(--gold);font-size:22px}
+.machine{
+  position:relative;border:4px solid #c89b27;border-radius:19px;padding:8px;
+  background:linear-gradient(#17331d,#0b1b10);box-shadow:inset 0 0 28px #000;
+}
+.reels{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;overflow:hidden}
+.reel{display:grid;grid-template-rows:repeat(3,1fr);gap:6px}
+.cell{
+  aspect-ratio:1/1;min-height:88px;border:2px solid #9db8a3;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;
+  background:radial-gradient(circle at 50% 35%,#224d2d,#0d2815 68%);
+  box-shadow:inset 0 -12px 24px rgba(0,0,0,.45);
+  transition:transform .16s ease,filter .16s ease,box-shadow .16s ease;
+}
+.cell:after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent 35%);pointer-events:none}
+.cell.spinny{animation:blurSpin .11s linear infinite}
+@keyframes blurSpin{50%{filter:blur(3px) brightness(1.25);transform:translateY(5px)}}
+.cell.win{
+  z-index:2;transform:scale(1.035);outline:4px solid #fff21c;
+  background:radial-gradient(circle,#76640a,#2e2705 72%);
+  box-shadow:0 0 22px #ffd900,inset 0 0 16px rgba(255,238,0,.25);
+  animation:pulseWin .55s ease-in-out infinite alternate
+}
+@keyframes pulseWin{to{filter:brightness(1.25)}}
+.symbol{width:72%;height:72%;display:grid;place-items:center;position:relative}
+.symname{position:absolute;left:2px;right:2px;bottom:3px;text-align:center;font-size:10px;font-weight:900;letter-spacing:.5px;text-shadow:0 2px 4px #000}
+.football{width:70%;height:43%;border-radius:60% 12% 60% 12%/60% 20% 60% 20%;transform:rotate(-18deg);background:#8f481f;border:3px solid #fff0ce;position:relative;box-shadow:inset 0 0 0 3px #5f2d14}
+.football:before{content:"";position:absolute;width:46%;height:3px;background:#fff0ce;left:27%;top:46%}
+.football:after{content:"||||";position:absolute;color:#fff0ce;letter-spacing:0px;font-weight:bold;font-size:10px;left:34%;top:27%;transform:rotate(90deg)}
+.helmet{width:62%;height:58%;background:linear-gradient(#dfe6ee,#7b8896);border-radius:55% 48% 36% 26%;position:relative;border:3px solid #fff}
+.helmet:before{content:"";position:absolute;width:55%;height:35%;right:-28%;bottom:2%;border:4px solid #ccd5dd;border-left:0;border-radius:0 18px 18px 0}
+.helmet:after{content:"★";color:#173764;position:absolute;font-size:22px;left:26%;top:20%}
+.jersey{width:68%;height:68%;background:linear-gradient(#bd1e35,#74101f);clip-path:polygon(17% 9%,34% 0,42% 11%,58% 11%,66% 0,83% 9%,100% 24%,88% 39%,80% 32%,80% 100%,20% 100%,20% 32%,12% 39%,0 24%);display:grid;place-items:center;font-size:28px;font-weight:1000}
+.playbook{width:68%;height:60%;background:#24352b;border:3px solid #d7e3d7;border-radius:5px;position:relative}
+.playbook:before{content:"×  ○   ×\A  ↘ ↗\A ○  × ○";white-space:pre;color:#fff;position:absolute;inset:8px;font-size:12px;line-height:1.15}
+.seven{font-size:58px;font-weight:1000;color:#ee263d;text-shadow:0 3px 0 #740716,0 0 5px #fff}
+.trophy{font-size:54px;filter:drop-shadow(0 3px 2px #000)}
+.wildbadge{width:82%;height:55%;border:3px solid #ffe764;border-radius:10px;background:linear-gradient(#f2b623,#b56b00);display:grid;place-items:center;font-size:18px;font-weight:1000;color:#1e1000;text-shadow:0 1px #fff}
+.scatter{width:72%;height:58%;border-radius:50% 50% 15% 15%;background:linear-gradient(#2b5ea7,#0f274b);border:3px solid #e9f4ff;position:relative}
+.scatter:before{content:"GOAL";position:absolute;left:10%;right:10%;top:12%;font-size:13px;font-weight:1000;text-align:center;color:#fff}
+.scatter:after{content:"";position:absolute;left:22%;right:22%;bottom:10%;height:35%;border-left:4px solid #ffd34d;border-right:4px solid #ffd34d;border-top:4px solid #ffd34d}
+.status{
+  min-height:50px;padding:11px;text-align:center;font-weight:900;color:#fff0a5;
+  font-size:17px;border-bottom:1px solid #59460e
+}
+.controls{display:grid;grid-template-columns:1fr 1fr 1fr 1.35fr;gap:9px;padding:12px;background:#050806}
+.panel{border:2px solid #52596f;border-radius:13px;background:#101720;padding:9px;text-align:center}
+.label{font-size:11px;color:#b9bbc4}.value{font-size:25px;font-weight:1000;color:var(--gold)}
+.betrow{display:flex;gap:6px;margin-top:5px}
+button{
+  appearance:none;border:3px solid var(--gold);border-radius:14px;color:#fff;font-weight:1000;
+  font-size:22px;min-height:62px;background:linear-gradient(#20a34a,#087128);box-shadow:0 5px 0 #044e1b;
+  cursor:pointer;touch-action:manipulation
+}
+button:active{transform:translateY(3px);box-shadow:0 2px 0 #044e1b}
+button.blue{background:linear-gradient(#3c8cf0,#1a4f9f);box-shadow:0 5px 0 #123d7c}
+.betrow button{min-height:34px;font-size:19px}
+.sidebox ul{padding-left:18px;margin:7px 0}.sidebox li{margin:8px 0;font-size:14px}
+.fieldbonus{margin-top:12px}
+.field{height:190px;border:2px solid #dbf0db;background:repeating-linear-gradient(0deg,#145f2b 0 17px,#0f5225 17px 34px);position:relative;overflow:hidden;border-radius:10px}
+.yard{position:absolute;left:5%;right:5%;height:1px;background:rgba(255,255,255,.45)}
+.ball{position:absolute;left:50%;transform:translateX(-50%);font-size:27px;transition:bottom .55s ease;filter:drop-shadow(0 2px 2px #000)}
+.goal{position:absolute;top:6px;left:50%;transform:translateX(-50%);font-size:30px;color:#ffd34d}
+.overlay{
+  position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.45);z-index:20;pointer-events:none
+}
+.overlay.show{display:grid}
+.bigmsg{
+  font-size:clamp(42px,12vw,110px);font-weight:1000;text-align:center;color:#ffe04d;
+  text-shadow:0 5px 0 #9f1d1d,0 9px 0 #531010,0 0 35px #fff;
+  animation:pop .5s ease both
+}
+@keyframes pop{0%{transform:scale(.2) rotate(-7deg);opacity:0}75%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+.footer{font-size:12px;color:#bfc5bf;text-align:center;padding:4px 12px 14px}
+@media(max-width:900px){
+  body{padding:0}.game{border-radius:0;min-height:100vh;border-left:0;border-right:0}
+  .main{display:block;padding:8px}.sidebox{display:none}
+  .cell{min-height:63px}.controls{grid-template-columns:1fr 1fr}
+  .title{font-size:clamp(32px,9vw,55px)}
+}
 </style>
 </head>
 <body>
 <div class="game">
-  <div class="top">
+  <div class="header">
+    <div class="stadium-lights"><div class="light"></div><div class="light"></div></div>
     <div class="brand">S&amp;K ENTERTAINMENT PRESENTS</div>
-    <h1>4TH &amp; GOAL SLOTS</h1>
-    <div class="tag">PLAY • WIN • SCORE BIG</div>
+    <div class="title">4TH &amp; GOAL SLOTS</div>
+    <div class="subtitle">PLAY • WIN • SCORE BIG</div>
   </div>
 
   <div class="main">
-    <div class="side">
+    <aside class="sidebox">
       <h3>JACKPOTS</h3>
-      <div class="jackpot"><small>GRAND</small><strong>1,000,000</strong></div>
-      <div class="jackpot"><small>MAJOR</small><strong>250,000</strong></div>
-      <div class="jackpot"><small>MINOR</small><strong>50,000</strong></div>
-      <div class="jackpot"><small>MINI</small><strong>10,000</strong></div>
-    </div>
+      <div class="jackpot">GRAND<b>1,000,000</b></div>
+      <div class="jackpot">MAJOR<b>250,000</b></div>
+      <div class="jackpot">MINOR<b>50,000</b></div>
+      <div class="jackpot">MINI<b>10,000</b></div>
+    </aside>
 
-    <div>
-      <div class="machine">
-        <div id="reels" class="reels"></div>
-      </div>
+    <section>
+      <div class="machine"><div id="reels" class="reels"></div></div>
       <div id="status" class="status">Ready for kickoff.</div>
-    </div>
+    </section>
 
-    <div class="bonus">
+    <aside class="sidebox">
       <h3>BONUS FEATURES</h3>
       <ul>
-        <li>🏈 3+ Scatters = Free Spins</li>
-        <li>⭐ Wild substitutes for regular symbols</li>
-        <li>🏆 5 Trophy symbols = huge payout</li>
-        <li>🔥 Big wins get highlighted</li>
+        <li>3+ Stadiums = Free Spins</li>
+        <li>WILD substitutes for regular symbols</li>
+        <li>Big wins drive the ball downfield</li>
+        <li>Reach the end zone for a touchdown bonus</li>
       </ul>
-    </div>
+      <div class="fieldbonus">
+        <h3>DRIVE</h3>
+        <div class="field" id="field">
+          <div class="goal">Y</div>
+          <div class="ball" id="ball" style="bottom:6px">🏈</div>
+        </div>
+      </div>
+    </aside>
   </div>
 
   <div class="controls">
+    <div class="panel"><div class="label">CREDITS</div><div id="credits" class="value">100,000</div></div>
     <div class="panel">
-      <div class="label">CREDITS</div>
-      <div id="credits" class="value">100000</div>
+      <div class="label">BET</div><div id="bet" class="value">100</div>
+      <div class="betrow"><button id="betDown" class="blue">−</button><button id="betUp" class="blue">+</button></div>
     </div>
-
     <div class="panel">
-      <div class="label">BET</div>
-      <div id="bet" class="value">100</div>
-      <div class="bet-row">
-        <button id="betDown" class="secondary">−</button>
-        <button id="betUp" class="secondary">+</button>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="label">WIN</div>
-      <div id="win" class="value">0</div>
+      <div class="label">WIN</div><div id="win" class="value">0</div>
       <div class="label">FREE SPINS: <span id="freeSpins">0</span></div>
     </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:10px">
-      <button id="maxBet" class="secondary">MAX BET</button>
+    <div style="display:grid;grid-template-columns:1fr 1.25fr;gap:8px">
+      <button id="maxBet" class="blue">MAX BET</button>
       <button id="spin">SPIN</button>
     </div>
   </div>
-
-  <div class="paytable">
-    Prototype only — virtual credits, no cash value. Paylines: 10 horizontal/diagonal patterns.
-  </div>
+  <div class="footer">Prototype — virtual credits only, no cash value. 10 paylines.</div>
 </div>
+<div id="overlay" class="overlay"><div id="bigmsg" class="bigmsg">TOUCHDOWN!</div></div>
 
 <script>
-const SYMBOLS = [
-  {id:"football", icon:"🏈", name:"FOOTBALL", weight:22, pay:[0,0,3,8,18]},
-  {id:"helmet", icon:"⛑️", name:"HELMET", weight:20, pay:[0,0,4,10,24]},
-  {id:"jersey", icon:"👕", name:"JERSEY", weight:18, pay:[0,0,5,12,30]},
-  {id:"play", icon:"📋", name:"PLAYBOOK", weight:16, pay:[0,0,6,15,40]},
-  {id:"seven", icon:"7️⃣", name:"SEVEN", weight:12, pay:[0,0,10,25,75]},
-  {id:"trophy", icon:"🏆", name:"TROPHY", weight:8, pay:[0,0,15,50,150]},
-  {id:"wild", icon:"⭐", name:"WILD", weight:5, pay:[0,0,20,75,250]},
-  {id:"scatter", icon:"🏟️", name:"SCATTER", weight:5, pay:[0,0,0,0,0]}
+const SYMBOLS=[
+ {id:"football",name:"FOOTBALL",weight:22,pay:[0,0,3,8,18]},
+ {id:"helmet",name:"HELMET",weight:20,pay:[0,0,4,10,24]},
+ {id:"jersey",name:"JERSEY",weight:18,pay:[0,0,5,12,30]},
+ {id:"play",name:"PLAYBOOK",weight:16,pay:[0,0,6,15,40]},
+ {id:"seven",name:"SEVEN",weight:12,pay:[0,0,10,25,75]},
+ {id:"trophy",name:"TROPHY",weight:8,pay:[0,0,15,50,150]},
+ {id:"wild",name:"WILD",weight:5,pay:[0,0,20,75,250]},
+ {id:"scatter",name:"SCATTER",weight:5,pay:[0,0,0,0,0]}
 ];
-
-const PAYLINES = [
-  [1,1,1,1,1],
-  [0,0,0,0,0],
-  [2,2,2,2,2],
-  [0,1,2,1,0],
-  [2,1,0,1,2],
-  [0,0,1,2,2],
-  [2,2,1,0,0],
-  [1,0,0,0,1],
-  [1,2,2,2,1],
-  [0,1,1,1,0]
+const PAYLINES=[
+ [1,1,1,1,1],[0,0,0,0,0],[2,2,2,2,2],[0,1,2,1,0],[2,1,0,1,2],
+ [0,0,1,2,2],[2,2,1,0,0],[1,0,0,0,1],[1,2,2,2,1],[0,1,1,1,0]
 ];
-
-let credits = 100000;
-let bet = 100;
-let lastWin = 0;
-let freeSpins = 0;
-let grid = [];
-
-const reelsEl = document.getElementById("reels");
-const creditsEl = document.getElementById("credits");
-const betEl = document.getElementById("bet");
-const winEl = document.getElementById("win");
-const statusEl = document.getElementById("status");
-const freeSpinsEl = document.getElementById("freeSpins");
+let credits=100000,bet=100,lastWin=0,freeSpins=0,grid=[],drive=0,busy=false;
+const $=id=>document.getElementById(id);
+const reelsEl=$("reels"),statusEl=$("status"),overlay=$("overlay"),bigmsg=$("bigmsg");
 
 function weightedSymbol(){
-  const total = SYMBOLS.reduce((a,s)=>a+s.weight,0);
-  let r = Math.random()*total;
-  for(const s of SYMBOLS){
-    r -= s.weight;
-    if(r <= 0) return s;
-  }
-  return SYMBOLS[0];
+ const total=SYMBOLS.reduce((a,s)=>a+s.weight,0); let r=Math.random()*total;
+ for(const s of SYMBOLS){r-=s.weight;if(r<=0)return s} return SYMBOLS[0]
 }
-
-function makeGrid(){
-  return Array.from({length:5},()=>Array.from({length:3},()=>weightedSymbol()));
+function makeGrid(){return Array.from({length:5},()=>Array.from({length:3},weightedSymbol))}
+function symbolHTML(s){
+ let art="";
+ if(s.id==="football") art='<div class="football"></div>';
+ if(s.id==="helmet") art='<div class="helmet"></div>';
+ if(s.id==="jersey") art='<div class="jersey">1</div>';
+ if(s.id==="play") art='<div class="playbook"></div>';
+ if(s.id==="seven") art='<div class="seven">7</div>';
+ if(s.id==="trophy") art='<div class="trophy">🏆</div>';
+ if(s.id==="wild") art='<div class="wildbadge">WILD</div>';
+ if(s.id==="scatter") art='<div class="scatter"></div>';
+ return `<div class="symbol">${art}</div><div class="symname">${s.name}</div>`
 }
-
-function renderGrid(highlights=[]){
-  reelsEl.innerHTML = "";
-  for(let c=0;c<5;c++){
-    const reel = document.createElement("div");
-    reel.className="reel";
-    for(let r=0;r<3;r++){
-      const s=grid[c][r];
-      const cell=document.createElement("div");
-      cell.className="cell";
-      if(highlights.some(h=>h.c===c && h.r===r)) cell.classList.add("win");
-      cell.innerHTML=`${s.icon}<span>${s.name}</span>`;
-      reel.appendChild(cell);
-    }
-    reelsEl.appendChild(reel);
-  }
+function renderGrid(highlights=[],spinning=false){
+ reelsEl.innerHTML="";
+ for(let c=0;c<5;c++){
+  const reel=document.createElement("div");reel.className="reel";
+  for(let r=0;r<3;r++){
+   const cell=document.createElement("div");cell.className="cell"+(spinning?" spinny":"");
+   if(highlights.some(h=>h.c===c&&h.r===r))cell.classList.add("win");
+   cell.innerHTML=symbolHTML(grid[c][r]);reel.appendChild(cell)
+  } reelsEl.appendChild(reel)
+ }
 }
-
 function updateUI(){
-  creditsEl.textContent=credits.toLocaleString();
-  betEl.textContent=bet.toLocaleString();
-  winEl.textContent=lastWin.toLocaleString();
-  freeSpinsEl.textContent=freeSpins;
+ $("credits").textContent=credits.toLocaleString();$("bet").textContent=bet.toLocaleString();
+ $("win").textContent=lastWin.toLocaleString();$("freeSpins").textContent=freeSpins;
+ $("ball").style.bottom=(6+Math.min(85,drive)*1.75)+"px";
 }
-
+function tone(freq=440,dur=.08,type="sine",gain=.035){
+ try{
+  const A=window.AudioContext||window.webkitAudioContext,ctx=tone.ctx||(tone.ctx=new A());
+  const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=freq;
+  g.gain.value=gain;o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+dur)
+ }catch(e){}
+}
+function winSound(big=false){[0,80,160,240].forEach((d,i)=>setTimeout(()=>tone((big?500:330)+i*90,.12,"triangle",.04),d))}
+function showOverlay(text,ms=1100){
+ bigmsg.textContent=text;overlay.classList.add("show");setTimeout(()=>overlay.classList.remove("show"),ms)
+}
 function evaluate(){
-  let win=0;
-  let highlights=[];
-  const lineBet = bet / PAYLINES.length;
-
-  PAYLINES.forEach((line)=>{
-    const syms=line.map((row,col)=>grid[col][row]);
-    let base = syms[0].id === "wild" ? null : syms[0];
-    if(!base){
-      base = syms.find(s=>s.id!=="wild" && s.id!=="scatter") || SYMBOLS.find(s=>s.id==="wild");
-    }
-    if(base.id==="scatter") return;
-
-    let count=0;
-    for(const s of syms){
-      if(s.id===base.id || s.id==="wild") count++;
-      else break;
-    }
-    if(count>=3){
-      const mult = base.pay[count-1] || 0;
-      win += Math.floor(mult*lineBet);
-      for(let c=0;c<count;c++) highlights.push({c,r:line[c]});
-    }
-  });
-
-  let scatterCount=0;
-  for(let c=0;c<5;c++){
-    for(let r=0;r<3;r++){
-      if(grid[c][r].id==="scatter"){
-        scatterCount++;
-        highlights.push({c,r});
-      }
-    }
+ let win=0,highlights=[];const lineBet=bet/PAYLINES.length;
+ PAYLINES.forEach(line=>{
+  const syms=line.map((row,col)=>grid[col][row]);
+  let base=syms[0].id==="wild"?null:syms[0];
+  if(!base)base=syms.find(s=>s.id!=="wild"&&s.id!=="scatter")||SYMBOLS.find(s=>s.id==="wild");
+  if(base.id==="scatter")return;
+  let count=0;
+  for(const s of syms){if(s.id===base.id||s.id==="wild")count++;else break}
+  if(count>=3){
+   win+=Math.floor((base.pay[count-1]||0)*lineBet);
+   for(let c=0;c<count;c++)highlights.push({c,r:line[c]})
   }
-
-  if(scatterCount>=3){
-    const scatterWin = Math.floor(bet * (scatterCount===3?2:scatterCount===4?8:25));
-    win += scatterWin;
-    const awarded = scatterCount===3?5:scatterCount===4?8:12;
-    freeSpins += awarded;
-    statusEl.textContent=`TOUCHDOWN BONUS! ${scatterCount} scatters = ${awarded} free spins!`;
-  }
-
-  return {win,highlights,scatterCount};
+ });
+ let scatterCount=0;
+ for(let c=0;c<5;c++)for(let r=0;r<3;r++)if(grid[c][r].id==="scatter"){scatterCount++;highlights.push({c,r})}
+ if(scatterCount>=3){
+  win+=Math.floor(bet*(scatterCount===3?2:scatterCount===4?8:25));
+  const awarded=scatterCount===3?5:scatterCount===4?8:12;freeSpins+=awarded;
+  statusEl.textContent=`STADIUM BONUS! ${awarded} free spins awarded.`;
+  showOverlay("FREE SPINS!",1200);winSound(true)
+ }
+ return{win,highlights,scatterCount}
 }
-
+function advanceDrive(winAmount){
+ if(winAmount<=0)return;
+ const yards=Math.max(3,Math.min(35,Math.round((winAmount/Math.max(1,bet))*7)));
+ drive+=yards;
+ if(drive>=100){
+  const bonus=Math.max(500,bet*5);credits+=bonus;drive=0;
+  showOverlay("TOUCHDOWN!",1300);statusEl.textContent=`🏈 TOUCHDOWN BONUS! +${bonus.toLocaleString()} credits`;winSound(true)
+ }
+}
 async function spin(){
-  document.getElementById("spin").disabled=true;
-  lastWin=0;
-
-  if(freeSpins>0){
-    freeSpins--;
-    statusEl.textContent="Free spin in play!";
-  }else{
-    if(credits<bet){
-      statusEl.textContent="Not enough credits. Lower the bet.";
-      document.getElementById("spin").disabled=false;
-      return;
-    }
-    credits-=bet;
-  }
-
-  updateUI();
-
-  for(let i=0;i<8;i++){
-    grid=makeGrid();
-    renderGrid();
-    await new Promise(r=>setTimeout(r,55+i*8));
-  }
-
-  const result=evaluate();
-  lastWin=result.win;
-  credits+=lastWin;
-  renderGrid(result.highlights);
-  updateUI();
-
-  if(result.scatterCount<3){
-    if(lastWin===0) statusEl.textContent="No score this spin. Line up the next play.";
-    else if(lastWin>=bet*20) statusEl.textContent=`🔥 HUGE WIN! ${lastWin.toLocaleString()} credits!`;
-    else if(lastWin>=bet*5) statusEl.textContent=`🏈 BIG PLAY! ${lastWin.toLocaleString()} credits!`;
-    else statusEl.textContent=`You won ${lastWin.toLocaleString()} credits.`;
-  }
-
-  document.getElementById("spin").disabled=false;
+ if(busy)return;busy=true;$("spin").disabled=true;lastWin=0;
+ if(freeSpins>0){freeSpins--;statusEl.textContent="Free spin — offense on the field!"}
+ else{
+  if(credits<bet){statusEl.textContent="Not enough credits. Lower the bet.";busy=false;$("spin").disabled=false;return}
+  credits-=bet
+ }
+ updateUI();tone(190,.07,"square",.025);
+ for(let i=0;i<12;i++){
+  grid=makeGrid();renderGrid([],true);
+  await new Promise(r=>setTimeout(r,38+i*7))
+ }
+ const result=evaluate();lastWin=result.win;credits+=lastWin;renderGrid(result.highlights,false);
+ advanceDrive(lastWin);updateUI();
+ if(result.scatterCount<3){
+  if(lastWin===0){statusEl.textContent="No score this spin. Next play.";tone(110,.08,"sine",.02)}
+  else if(lastWin>=bet*20){statusEl.textContent=`🔥 MASSIVE WIN! ${lastWin.toLocaleString()} credits!`;showOverlay("MASSIVE WIN!");winSound(true)}
+  else if(lastWin>=bet*5){statusEl.textContent=`🏈 BIG PLAY! ${lastWin.toLocaleString()} credits!`;showOverlay("BIG PLAY!",900);winSound()}
+  else{statusEl.textContent=`You won ${lastWin.toLocaleString()} credits.`;winSound()}
+ }
+ busy=false;$("spin").disabled=false
 }
-
-document.getElementById("spin").addEventListener("click",spin);
-document.getElementById("maxBet").addEventListener("click",()=>{bet=Math.min(1000,credits||1000);updateUI();});
-document.getElementById("betUp").addEventListener("click",()=>{bet=Math.min(1000,bet+100);updateUI();});
-document.getElementById("betDown").addEventListener("click",()=>{bet=Math.max(100,bet-100);updateUI();});
-
-grid=makeGrid();
-renderGrid();
-updateUI();
+$("spin").addEventListener("click",spin);
+$("maxBet").addEventListener("click",()=>{if(!busy){bet=Math.min(1000,Math.max(100,credits||1000));updateUI()}});
+$("betUp").addEventListener("click",()=>{if(!busy){bet=Math.min(1000,bet+100);updateUI()}});
+$("betDown").addEventListener("click",()=>{if(!busy){bet=Math.max(100,bet-100);updateUI()}});
+grid=makeGrid();renderGrid();updateUI();
 </script>
 </body>
 </html>
