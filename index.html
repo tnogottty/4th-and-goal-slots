@@ -225,6 +225,9 @@ const PAYLINES=[
  [0,0,1,2,2],[2,2,1,0,0],[1,0,0,0,1],[1,2,2,2,1],[0,1,1,1,0]
 ];
 let credits=100000,bet=100,lastWin=0,freeSpins=0,grid=[],drive=0,busy=false;
+// Friendly balance: roughly 56% of spins produce a win, with most boosts
+// creating modest scoring plays while premium symbols stay naturally rare.
+const FRIENDLY_WIN_CHANCE=.28;
 const $=id=>document.getElementById(id);
 const reelsEl=$("reels"),statusEl=$("status"),overlay=$("overlay"),bigmsg=$("bigmsg");
 
@@ -233,6 +236,31 @@ function weightedSymbol(){
  for(const s of SYMBOLS){r-=s.weight;if(r<=0)return s} return SYMBOLS[0]
 }
 function makeGrid(){return Array.from({length:5},()=>Array.from({length:3},weightedSymbol))}
+function hasPayingResult(candidate){
+ for(const line of PAYLINES){
+  const syms=line.map((row,col)=>candidate[col][row]);
+  let base=syms[0].id==="wild"?null:syms[0];
+  if(!base)base=syms.find(s=>s.id!=="wild"&&s.id!=="scatter")||SYMBOLS.find(s=>s.id==="wild");
+  if(base.id==="scatter")continue;
+  let count=0;
+  for(const s of syms){if(s.id===base.id||s.id==="wild")count++;else break}
+  if(count>=3)return true
+ }
+ return candidate.flat().filter(s=>s.id==="scatter").length>=3
+}
+function makeSpinGrid(){
+ const candidate=makeGrid();
+ if(hasPayingResult(candidate)||Math.random()>=FRIENDLY_WIN_CHANCE)return candidate;
+
+ // Turn some losing spins into a full-line football play. Keeping this to the
+ // four regular symbols makes wins frequent without cheapening Wild/Trophy hits.
+ const clearLines=PAYLINES.filter(line=>line.every((row,col)=>candidate[col][row].id!=="scatter"));
+ if(!clearLines.length)return candidate;
+ const line=clearLines[Math.floor(Math.random()*clearLines.length)];
+ const scoringSymbol=SYMBOLS[Math.floor(Math.random()*4)];
+ line.forEach((row,col)=>candidate[col][row]=scoringSymbol);
+ return candidate
+}
 function symbolHTML(s){
  let art="";
  if(s.id==="football") art='<div class="football"></div>';
@@ -328,7 +356,7 @@ async function spin(){
   credits-=bet
  }
  updateUI();tone(190,.07,"square",.025);
- grid=makeGrid();renderGrid([],true);
+ grid=makeSpinGrid();renderGrid([],true);
  const spinStart=performance.now();
  while(performance.now()-spinStart<560){
   for(let c=0;c<5;c++)for(let r=0;r<3;r++)reelsEl.children[c].children[r].innerHTML=symbolHTML(weightedSymbol());
