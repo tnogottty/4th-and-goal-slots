@@ -85,8 +85,9 @@ body{
   animation:pulseWin .55s ease-in-out infinite alternate
 }
 @keyframes pulseWin{to{filter:brightness(1.25)}}
-.symbol{width:72%;height:72%;display:grid;place-items:center;position:relative}
-.symname{position:absolute;left:2px;right:2px;bottom:3px;text-align:center;font-size:10px;font-weight:900;letter-spacing:.5px;text-shadow:0 2px 4px #000}
+.symbol{position:absolute;inset:5% 8% 23%;display:grid;place-items:center}
+.symbol svg{width:100%;height:100%;filter:drop-shadow(0 3px 2px #020914)}
+.symname{position:absolute;left:1px;right:1px;bottom:4%;text-align:center;font-size:clamp(7px,1.5vw,11px);font-weight:900;letter-spacing:.2px;text-shadow:0 2px 4px #000;line-height:1.1}
 .football{width:70%;height:43%;border-radius:60% 12% 60% 12%/60% 20% 60% 20%;transform:rotate(-18deg);background:#8f481f;border:3px solid #fff0ce;position:relative;box-shadow:inset 0 0 0 3px #5f2d14}
 .football:before{content:"";position:absolute;width:46%;height:3px;background:#fff0ce;left:27%;top:46%}
 .football:after{content:"||||";position:absolute;color:#fff0ce;letter-spacing:0px;font-weight:bold;font-size:10px;left:34%;top:27%;transform:rotate(90deg)}
@@ -158,6 +159,13 @@ button.blue{background:linear-gradient(#3c8cf0,#1a4f9f);box-shadow:0 5px 0 #123d
     <div class="subtitle">PLAY • WIN • SCORE BIG</div>
   </div>
 
+  <section class="panel" style="margin:12px" aria-label="Welcome bonus">
+    <strong>🏈 WELCOME KICKOFF BONUS</strong>
+    <p id="welcomeInfo" aria-live="polite">Claim 25,000 extra virtual credits + 10 free spins. No purchase needed. Same odds before and after the bonus.</p>
+    <button id="claimWelcome" class="blue" style="font-size:18px;padding:8px 18px">CLAIM FREE BONUS</button>
+    <p style="font-size:12px;color:#b9bbc4">One claim per browser save. Free spins use your selected bet (100–1,000). Credits have no cash value. Clearing browser data resets this prototype.</p>
+    <div id="saveNotice" role="status" style="font-size:12px"></div>
+  </section>
   <div class="main">
     <aside class="sidebox">
       <h3>JACKPOTS</h3>
@@ -225,11 +233,33 @@ const PAYLINES=[
  [0,0,1,2,2],[2,2,1,0,0],[1,0,0,0,1],[1,2,2,2,1],[0,1,1,1,0]
 ];
 let credits=100000,bet=100,lastWin=0,freeSpins=0,grid=[],drive=0,busy=false;
+const SAVE_KEY="sk-fourth-goal-save-v1";
+let welcomeClaimed=false;
 // Friendly balance: roughly 56% of spins produce a win, with most boosts
 // creating modest scoring plays while premium symbols stay naturally rare.
 const FRIENDLY_WIN_CHANCE=.28;
 const $=id=>document.getElementById(id);
 const reelsEl=$("reels"),statusEl=$("status"),overlay=$("overlay"),bigmsg=$("bigmsg");
+function saveProgress(){
+ try{localStorage.setItem(SAVE_KEY,JSON.stringify({credits,bet,freeSpins,drive,welcomeClaimed}));
+  $("saveNotice").textContent="Progress saved on this browser.";
+ }catch(e){$("saveNotice").textContent="Browser saving unavailable. Progress and bonus claim last only for this visit."}
+}
+function restoreProgress(){
+ try{
+  const s=JSON.parse(localStorage.getItem(SAVE_KEY));
+  if(!s)return;
+  if(!Number.isSafeInteger(s.credits)||s.credits<0||!Number.isSafeInteger(s.freeSpins)||s.freeSpins<0||
+     !Number.isInteger(s.bet)||s.bet<100||s.bet>1000||!Number.isInteger(s.drive)||s.drive<0||s.drive>=100||typeof s.welcomeClaimed!=="boolean")throw new Error("Invalid save");
+  ({credits,bet,freeSpins,drive,welcomeClaimed}=s);
+ }catch(e){$("saveNotice").textContent="Saved progress could not be loaded; this visit starts fresh."}
+}
+function claimWelcome(){
+ if(busy||welcomeClaimed)return;
+ welcomeClaimed=true;credits+=25000;freeSpins+=10;
+ updateUI();saveProgress();
+ statusEl.textContent="Welcome bonus claimed! +25,000 credits and 10 free spins. Tap SPIN to play.";
+}
 
 function weightedSymbol(){
  const total=SYMBOLS.reduce((a,s)=>a+s.weight,0); let r=Math.random()*total;
@@ -262,6 +292,14 @@ function makeSpinGrid(){
  return candidate
 }
 function symbolHTML(s){
+ const drawings={
+ football:'<g transform="rotate(-25 50 50)"><path d="M8 50Q48 4 92 50Q50 96 8 50" fill="#a95728" stroke="#ffdfaa" stroke-width="3"/><path d="M20 37Q28 50 20 63M80 37Q72 50 80 63" fill="none" stroke="#fff0d4" stroke-width="5"/><path d="M35 49H65M40 42V56M50 42V56M60 42V56" stroke="#fff6e6" stroke-width="3"/><path d="M29 33Q49 20 69 33" fill="none" stroke="#e99550" stroke-width="3"/></g>',
+ helmet:'<path d="M13 59V47C13 10 73 7 79 43L68 53V68H26Q13 68 13 59" fill="#258fda" stroke="#e3eff8" stroke-width="3"/><path d="M25 28Q48 10 65 29" fill="none" stroke="#89d7ff" stroke-width="7"/><path d="M62 46H80V63H66" fill="#06162a"/><path d="M68 52H89V75H64V58M76 52V75M66 63H89" fill="none" stroke="#d6e5f0" stroke-width="4" stroke-linejoin="round"/><circle cx="57" cy="59" r="5" fill="#b9d6eb"/><text x="29" y="50" fill="white" font-size="18" font-weight="900" font-style="italic">SK</text>',
+ play:'<rect x="17" y="13" width="66" height="72" rx="7" fill="#173d38" stroke="#dce9ef" stroke-width="3"/><rect x="36" y="9" width="28" height="10" rx="3" fill="#9fbac8"/><path d="M26 33L34 41M34 33L26 41M63 62L71 70M71 62L63 70" stroke="#fff" stroke-width="3"/><circle cx="32" cy="65" r="5" fill="none" stroke="#fff" stroke-width="3"/><circle cx="66" cy="35" r="5" fill="none" stroke="#fff" stroke-width="3"/><path d="M34 57L48 42V29M42 35L48 29L54 35M58 61L52 55L65 47M59 46L65 47L63 53" fill="none" stroke="#ffd34d" stroke-width="3" stroke-linejoin="round"/>',
+ jersey:'<path d="M32 15L16 22L5 41L21 52L28 43V85H72V43L79 52L95 41L84 22L68 15Q50 29 32 15" fill="#168cda" stroke="#dbeefa" stroke-width="3"/><path d="M33 15Q50 37 67 15M12 31L25 40M75 40L88 31" fill="none" stroke="#e4f3fa" stroke-width="4"/><text x="50" y="68" text-anchor="middle" fill="white" font-weight="900" font-size="37">1</text>',
+ trophy:'<path d="M27 24H12V37Q12 54 34 55M73 24H88V37Q88 54 66 55" fill="none" stroke="#ffc741" stroke-width="6"/><path d="M27 18H73L68 48Q65 60 50 63Q35 60 32 48Z" fill="#eeb12f" stroke="#ffe797" stroke-width="3"/><path d="M35 23L39 47" stroke="#fff1b6" stroke-width="5"/><path d="M50 62V76M34 77H66" stroke="#ffda65" stroke-width="7"/><rect x="27" y="81" width="46" height="8" rx="2" fill="#bf8438"/>'
+ };
+ if(drawings[s.id])return `<div class="symbol"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">${drawings[s.id]}</svg></div><div class="symname">${s.name}</div>`;
  let art="";
  if(s.id==="football") art='<div class="football"></div>';
  if(s.id==="helmet") art='<div class="helmet"></div>';
@@ -299,6 +337,9 @@ function celebration(count=34){
  },i*18)
 }
 function updateUI(){
+ $("claimWelcome").disabled=welcomeClaimed||busy;
+ $("claimWelcome").textContent=welcomeClaimed?"BONUS CLAIMED":"CLAIM FREE BONUS";
+ if(welcomeClaimed)$("welcomeInfo").textContent="25,000 bonus credits and 10 free spins awarded. Remaining free spins appear below. The odds stay the same.";
  $("credits").textContent=credits.toLocaleString();$("bet").textContent=bet.toLocaleString();
  $("win").textContent=lastWin.toLocaleString();$("freeSpins").textContent=freeSpins;
  $("ball").style.bottom=(6+Math.min(85,drive)*1.75)+"px";
@@ -372,13 +413,14 @@ async function spin(){
   else if(lastWin>=bet*5){statusEl.textContent=`🏈 BIG PLAY! ${lastWin.toLocaleString()} credits!`;showOverlay("BIG PLAY!",900);winSound();celebration(28)}
   else{statusEl.textContent=`You won ${lastWin.toLocaleString()} credits.`;winSound()}
  }
- busy=false;$("spin").disabled=false
+ busy=false;$("spin").disabled=false;updateUI();saveProgress()
 }
+$("claimWelcome").addEventListener("click",claimWelcome);
 $("spin").addEventListener("click",spin);
 $("maxBet").addEventListener("click",()=>{if(!busy){bet=Math.min(1000,Math.max(100,credits||1000));updateUI()}});
 $("betUp").addEventListener("click",()=>{if(!busy){bet=Math.min(1000,bet+100);updateUI()}});
 $("betDown").addEventListener("click",()=>{if(!busy){bet=Math.max(100,bet-100);updateUI()}});
-grid=makeGrid();renderGrid();updateUI();
+restoreProgress();grid=makeGrid();renderGrid();updateUI();
 </script>
 </body>
 </html>
