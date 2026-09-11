@@ -3,31 +3,32 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#07140c">
+<meta name="theme-color" content="#071526">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect rx='14' width='64' height='64' fill='%23071526'/%3E%3Cpath d='M10 31h44M32 9v46' stroke='%2358b8ff' stroke-width='5'/%3E%3Cellipse cx='32' cy='32' rx='25' ry='15' fill='none' stroke='%23e8f2fa' stroke-width='4'/%3E%3C/svg%3E">
 <title>S&K Entertainment - 4th & Goal Slots</title>
 <style>
 :root{
-  --gold:#ffd34d; --gold2:#a86a00; --green:#12823b; --green2:#064a23;
-  --dark:#050806; --panel:#101820; --red:#b6162f; --blue:#1f6feb;
+  --gold:#ffd34d; --gold2:#a86a00; --green:#168b45; --green2:#064a23;
+  --dark:#030914; --panel:#101b2a; --red:#d92745; --blue:#168de2; --ice:#a9dcff; --silver:#dce8f1;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;min-height:100%;background:#020704;color:#fff;font-family:Arial,Helvetica,sans-serif}
+html,body{margin:0;min-height:100%;background:#020812;color:#fff;font-family:Arial,Helvetica,sans-serif}
 body{
   background:
-    radial-gradient(circle at 50% 0%,rgba(36,125,62,.42),transparent 34%),
-    linear-gradient(#06170b,#020704 75%);
+    radial-gradient(circle at 50% 0%,rgba(24,141,226,.35),transparent 37%),
+    linear-gradient(#07172a,#020711 72%);
   display:flex;justify-content:center;padding:10px 8px 28px;
 }
 .game{
   width:min(1180px,100%);
   border:3px solid var(--gold); border-radius:25px; overflow:hidden;
-  background:#07110b; box-shadow:0 0 34px rgba(255,207,52,.22), inset 0 0 0 2px #4d3810;
+  background:#07111d; box-shadow:0 0 34px rgba(59,164,238,.28), inset 0 0 0 2px #314a5e;
 }
 .header{
   position:relative;overflow:hidden;text-align:center;padding:18px 12px 16px;
   background:
     linear-gradient(rgba(0,0,0,.2),rgba(0,0,0,.78)),
-    repeating-linear-gradient(90deg,#0d2816 0 42px,#12331c 42px 84px);
+    repeating-linear-gradient(90deg,#0c2640 0 42px,#103451 42px 84px);
   border-bottom:2px solid #94731b;
 }
 .header:after{
@@ -38,7 +39,7 @@ body{
 .brand{font-weight:800;letter-spacing:4px;color:var(--gold);font-size:14px}
 .title{
   margin:6px 0 3px;font-size:clamp(34px,8vw,78px);font-weight:1000;line-height:.92;
-  text-shadow:0 4px 0 #8b1025,0 7px 0 #4b0914,0 0 20px rgba(255,255,255,.15);
+  color:#f8fbff;text-shadow:0 4px 0 #1788d3,0 7px 0 #0a416d,0 0 22px rgba(154,220,255,.5);
 }
 .subtitle{font-weight:900;letter-spacing:3px;font-size:clamp(13px,2vw,22px)}
 .stadium-lights{
@@ -48,7 +49,7 @@ body{
 .light{width:72px;height:16px;background:radial-gradient(circle,#fff 0 12%,#dff7ff 13% 24%,transparent 26%) 0 0/18px 16px}
 .main{display:grid;grid-template-columns:170px minmax(0,1fr) 190px;gap:10px;padding:12px}
 .sidebox{
-  border:2px solid #9b771f;border-radius:15px;background:linear-gradient(#101713,#070b09);
+  border:2px solid #698ba5;border-radius:15px;background:linear-gradient(#101e2c,#070e17);
   padding:10px;align-self:start
 }
 .sidebox h3{margin:0 0 10px;text-align:center;color:var(--gold);font-size:18px}
@@ -59,20 +60,24 @@ body{
 .jackpot b{display:block;color:var(--gold);font-size:22px}
 .machine{
   position:relative;border:4px solid #c89b27;border-radius:19px;padding:8px;
-  background:linear-gradient(#17331d,#0b1b10);box-shadow:inset 0 0 28px #000;
+  background:linear-gradient(#173550,#091725);box-shadow:inset 0 0 28px #000,0 0 18px rgba(40,156,232,.18);
 }
-.reels{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;overflow:hidden}
+.reels{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;overflow:hidden;perspective:900px}
 .reel{display:grid;grid-template-rows:repeat(3,1fr);gap:6px}
+.reel.rolling{animation:reelRock .16s linear infinite}
+@keyframes reelRock{0%{transform:translateY(-7px) rotateX(2deg)}50%{transform:translateY(7px) rotateX(-2deg)}100%{transform:translateY(-7px) rotateX(2deg)}}
+.reel.landed{animation:reelLand .3s cubic-bezier(.2,.9,.3,1.25)}
+@keyframes reelLand{0%{transform:translateY(-25px) scaleY(1.08)}70%{transform:translateY(5px) scaleY(.97)}100%{transform:none}}
 .cell{
   aspect-ratio:1/1;min-height:88px;border:2px solid #9db8a3;border-radius:12px;
   display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;
-  background:radial-gradient(circle at 50% 35%,#224d2d,#0d2815 68%);
+  background:radial-gradient(circle at 50% 35%,#214b6e,#0b2135 68%);
   box-shadow:inset 0 -12px 24px rgba(0,0,0,.45);
   transition:transform .16s ease,filter .16s ease,box-shadow .16s ease;
 }
 .cell:after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent 35%);pointer-events:none}
-.cell.spinny{animation:blurSpin .11s linear infinite}
-@keyframes blurSpin{50%{filter:blur(3px) brightness(1.25);transform:translateY(5px)}}
+.cell.spinny{animation:blurSpin .1s linear infinite}
+@keyframes blurSpin{0%{filter:blur(1px) brightness(.8);transform:translateY(-12px) scaleY(1.05)}50%{filter:blur(4px) brightness(1.25);transform:translateY(12px) scaleY(.92)}100%{filter:blur(1px) brightness(.8);transform:translateY(-12px) scaleY(1.05)}}
 .cell.win{
   z-index:2;transform:scale(1.035);outline:4px solid #fff21c;
   background:radial-gradient(circle,#76640a,#2e2705 72%);
@@ -85,10 +90,10 @@ body{
 .football{width:70%;height:43%;border-radius:60% 12% 60% 12%/60% 20% 60% 20%;transform:rotate(-18deg);background:#8f481f;border:3px solid #fff0ce;position:relative;box-shadow:inset 0 0 0 3px #5f2d14}
 .football:before{content:"";position:absolute;width:46%;height:3px;background:#fff0ce;left:27%;top:46%}
 .football:after{content:"||||";position:absolute;color:#fff0ce;letter-spacing:0px;font-weight:bold;font-size:10px;left:34%;top:27%;transform:rotate(90deg)}
-.helmet{width:62%;height:58%;background:linear-gradient(#dfe6ee,#7b8896);border-radius:55% 48% 36% 26%;position:relative;border:3px solid #fff}
-.helmet:before{content:"";position:absolute;width:55%;height:35%;right:-28%;bottom:2%;border:4px solid #ccd5dd;border-left:0;border-radius:0 18px 18px 0}
-.helmet:after{content:"★";color:#173764;position:absolute;font-size:22px;left:26%;top:20%}
-.jersey{width:68%;height:68%;background:linear-gradient(#bd1e35,#74101f);clip-path:polygon(17% 9%,34% 0,42% 11%,58% 11%,66% 0,83% 9%,100% 24%,88% 39%,80% 32%,80% 100%,20% 100%,20% 32%,12% 39%,0 24%);display:grid;place-items:center;font-size:28px;font-weight:1000}
+.helmet{width:65%;height:59%;background:linear-gradient(145deg,#f3f8fc 0 18%,#58b8f4 20% 62%,#11679e 100%);border-radius:58% 48% 38% 24%;position:relative;border:3px solid #eaf7ff;box-shadow:inset -8px -5px 0 rgba(0,40,73,.28),0 4px 7px #020a10}
+.helmet:before{content:"";position:absolute;width:57%;height:36%;right:-29%;bottom:0;border:4px solid #dbe7ef;border-left:0;border-radius:0 18px 18px 0;box-shadow:0 2px 0 #365a70}
+.helmet:after{content:"SK";color:#fff;position:absolute;font-size:clamp(11px,2vw,18px);font-weight:1000;font-style:italic;left:22%;top:26%;letter-spacing:-2px;text-shadow:0 2px 0 #07517e}
+.jersey{width:68%;height:68%;background:linear-gradient(#269ee9,#07598d);clip-path:polygon(17% 9%,34% 0,42% 11%,58% 11%,66% 0,83% 9%,100% 24%,88% 39%,80% 32%,80% 100%,20% 100%,20% 32%,12% 39%,0 24%);display:grid;place-items:center;font-size:28px;font-weight:1000;text-shadow:0 2px 0 #063654}
 .playbook{width:68%;height:60%;background:#24352b;border:3px solid #d7e3d7;border-radius:5px;position:relative}
 .playbook:before{content:"×  ○   ×\A  ↘ ↗\A ○  × ○";white-space:pre;color:#fff;position:absolute;inset:8px;font-size:12px;line-height:1.15}
 .seven{font-size:58px;font-weight:1000;color:#ee263d;text-shadow:0 3px 0 #740716,0 0 5px #fff}
@@ -123,6 +128,10 @@ button.blue{background:linear-gradient(#3c8cf0,#1a4f9f);box-shadow:0 5px 0 #123d
   position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.45);z-index:20;pointer-events:none
 }
 .overlay.show{display:grid}
+.game.impact{animation:impact .36s ease}
+@keyframes impact{0%,100%{transform:none}25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-2px)}}
+.confetti{position:fixed;z-index:25;width:10px;height:18px;top:-24px;pointer-events:none;animation:confettiFall 1.5s ease-in forwards}
+@keyframes confettiFall{to{transform:translate(var(--drift),110vh) rotate(720deg);opacity:.25}}
 .bigmsg{
   font-size:clamp(42px,12vw,110px);font-weight:1000;text-align:center;color:#ffe04d;
   text-shadow:0 5px 0 #9f1d1d,0 9px 0 #531010,0 0 35px #fff;
@@ -135,7 +144,9 @@ button.blue{background:linear-gradient(#3c8cf0,#1a4f9f);box-shadow:0 5px 0 #123d
   .main{display:block;padding:8px}.sidebox{display:none}
   .cell{min-height:63px}.controls{grid-template-columns:1fr 1fr}
   .title{font-size:clamp(32px,9vw,55px)}
+  .header{padding-top:15px}.brand{font-size:11px;letter-spacing:2px}.status{font-size:15px}
 }
+@media(prefers-reduced-motion:reduce){.cell.spinny,.reel.rolling,.reel.landed,.cell.win,.game.impact{animation:none!important}}
 </style>
 </head>
 <body>
@@ -237,13 +248,27 @@ function symbolHTML(s){
 function renderGrid(highlights=[],spinning=false){
  reelsEl.innerHTML="";
  for(let c=0;c<5;c++){
-  const reel=document.createElement("div");reel.className="reel";
+  const reel=document.createElement("div");reel.className="reel"+(spinning?" rolling":"");
   for(let r=0;r<3;r++){
    const cell=document.createElement("div");cell.className="cell"+(spinning?" spinny":"");
    if(highlights.some(h=>h.c===c&&h.r===r))cell.classList.add("win");
    cell.innerHTML=symbolHTML(grid[c][r]);reel.appendChild(cell)
   } reelsEl.appendChild(reel)
  }
+}
+function landReel(column){
+ const reel=reelsEl.children[column];if(!reel)return;
+ reel.classList.remove("rolling");reel.classList.add("landed");
+ [...reel.children].forEach((cell,row)=>{cell.classList.remove("spinny");cell.innerHTML=symbolHTML(grid[column][row])});
+ tone(120+column*28,.055,"square",.02)
+}
+function celebration(count=34){
+ const colors=["#58b8ff","#eef8ff","#ffd34d","#168de2"];
+ for(let i=0;i<count;i++)setTimeout(()=>{
+  const bit=document.createElement("i");bit.className="confetti";bit.style.left=Math.random()*100+"vw";
+  bit.style.background=colors[i%colors.length];bit.style.setProperty("--drift",(Math.random()*180-90)+"px");
+  bit.style.animationDuration=(1.15+Math.random()*.85)+"s";document.body.appendChild(bit);setTimeout(()=>bit.remove(),2200)
+ },i*18)
 }
 function updateUI(){
  $("credits").textContent=credits.toLocaleString();$("bet").textContent=bet.toLocaleString();
@@ -259,7 +284,8 @@ function tone(freq=440,dur=.08,type="sine",gain=.035){
 }
 function winSound(big=false){[0,80,160,240].forEach((d,i)=>setTimeout(()=>tone((big?500:330)+i*90,.12,"triangle",.04),d))}
 function showOverlay(text,ms=1100){
- bigmsg.textContent=text;overlay.classList.add("show");setTimeout(()=>overlay.classList.remove("show"),ms)
+ bigmsg.textContent=text;overlay.classList.add("show");document.querySelector(".game").classList.add("impact");
+ setTimeout(()=>{overlay.classList.remove("show");document.querySelector(".game").classList.remove("impact")},ms)
 }
 function evaluate(){
  let win=0,highlights=[];const lineBet=bet/PAYLINES.length;
@@ -281,7 +307,7 @@ function evaluate(){
   win+=Math.floor(bet*(scatterCount===3?2:scatterCount===4?8:25));
   const awarded=scatterCount===3?5:scatterCount===4?8:12;freeSpins+=awarded;
   statusEl.textContent=`STADIUM BONUS! ${awarded} free spins awarded.`;
-  showOverlay("FREE SPINS!",1200);winSound(true)
+  showOverlay("FREE SPINS!",1200);winSound(true);celebration(44)
  }
  return{win,highlights,scatterCount}
 }
@@ -291,7 +317,7 @@ function advanceDrive(winAmount){
  drive+=yards;
  if(drive>=100){
   const bonus=Math.max(500,bet*5);credits+=bonus;drive=0;
-  showOverlay("TOUCHDOWN!",1300);statusEl.textContent=`🏈 TOUCHDOWN BONUS! +${bonus.toLocaleString()} credits`;winSound(true)
+  showOverlay("TOUCHDOWN!",1300);statusEl.textContent=`🏈 TOUCHDOWN BONUS! +${bonus.toLocaleString()} credits`;winSound(true);celebration(70)
  }
 }
 async function spin(){
@@ -302,16 +328,20 @@ async function spin(){
   credits-=bet
  }
  updateUI();tone(190,.07,"square",.025);
- for(let i=0;i<12;i++){
-  grid=makeGrid();renderGrid([],true);
-  await new Promise(r=>setTimeout(r,38+i*7))
+ grid=makeGrid();renderGrid([],true);
+ const spinStart=performance.now();
+ while(performance.now()-spinStart<560){
+  for(let c=0;c<5;c++)for(let r=0;r<3;r++)reelsEl.children[c].children[r].innerHTML=symbolHTML(weightedSymbol());
+  await new Promise(r=>setTimeout(r,72))
  }
+ for(let c=0;c<5;c++){await new Promise(r=>setTimeout(r,125));landReel(c)}
+ await new Promise(r=>setTimeout(r,260));
  const result=evaluate();lastWin=result.win;credits+=lastWin;renderGrid(result.highlights,false);
  advanceDrive(lastWin);updateUI();
  if(result.scatterCount<3){
   if(lastWin===0){statusEl.textContent="No score this spin. Next play.";tone(110,.08,"sine",.02)}
-  else if(lastWin>=bet*20){statusEl.textContent=`🔥 MASSIVE WIN! ${lastWin.toLocaleString()} credits!`;showOverlay("MASSIVE WIN!");winSound(true)}
-  else if(lastWin>=bet*5){statusEl.textContent=`🏈 BIG PLAY! ${lastWin.toLocaleString()} credits!`;showOverlay("BIG PLAY!",900);winSound()}
+  else if(lastWin>=bet*20){statusEl.textContent=`🔥 MASSIVE WIN! ${lastWin.toLocaleString()} credits!`;showOverlay("MASSIVE WIN!");winSound(true);celebration(55)}
+  else if(lastWin>=bet*5){statusEl.textContent=`🏈 BIG PLAY! ${lastWin.toLocaleString()} credits!`;showOverlay("BIG PLAY!",900);winSound();celebration(28)}
   else{statusEl.textContent=`You won ${lastWin.toLocaleString()} credits.`;winSound()}
  }
  busy=false;$("spin").disabled=false
