@@ -213,6 +213,11 @@ button.blue{background:linear-gradient(#3c8cf0,#1a4f9f);box-shadow:0 5px 0 #123d
       <button id="spin">SPIN</button>
     </div>
   </div>
+  <div style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;padding:16px">
+    <button id="musicToggle" class="blue" aria-pressed="false" style="font-size:16px;min-height:44px;padding:6px 14px">♫ MUSIC: PLAY</button>
+    <label style="font-size:14px">Music volume <input id="musicVolume" type="range" min="0" max="100" value="25" style="width:100px;vertical-align:middle"></label>
+    <span id="musicStatus" role="status" style="font-size:12px">Tap PLAY or SPIN for stadium music.</span>
+  </div>
   <div class="footer">Prototype — virtual credits only, no cash value. 10 paylines.</div>
 </div>
 <div id="overlay" class="overlay"><div id="bigmsg" class="bigmsg">TOUCHDOWN!</div></div>
@@ -344,6 +349,65 @@ function updateUI(){
  $("win").textContent=lastWin.toLocaleString();$("freeSpins").textContent=freeSpins;
  $("ball").style.bottom=(6+Math.min(85,drive)*1.75)+"px";
 }
+// Original 8-bar instrumental. A separate bus keeps music volume independent
+// of reel/win effects. Schedule ahead on the audio clock for a steady beat.
+const music={enabled:true,volume:.25,ctx:null,bus:null,timer:null,step:0,next:0};
+try{const pref=JSON.parse(localStorage.getItem("sk-music-v1"));if(pref){music.enabled=pref.enabled!==false;if(Number.isFinite(pref.volume))music.volume=Math.max(0,Math.min(1,pref.volume))}}catch(e){}
+function musicUI(){
+ const playing=music.enabled&&music.timer!==null;
+ $("musicToggle").textContent=playing?"♫ MUSIC: ON":music.enabled?"♫ MUSIC: PLAY":"♫ MUSIC: OFF";
+ $("musicToggle").setAttribute("aria-pressed",String(playing));
+ $("musicVolume").value=Math.round(music.volume*100);
+}
+function saveMusic(){try{localStorage.setItem("sk-music-v1",JSON.stringify({enabled:music.enabled,volume:music.volume}))}catch(e){}}
+function musicNote(midi,time,duration,type,level){
+ const ctx=music.ctx,o=ctx.createOscillator(),g=ctx.createGain();
+ o.type=type;o.frequency.value=440*Math.pow(2,(midi-69)/12);
+ g.gain.setValueAtTime(0,time);g.gain.linearRampToValueAtTime(level,time+.012);
+ g.gain.exponentialRampToValueAtTime(.0001,time+duration);
+ o.connect(g);g.connect(music.bus);o.start(time);o.stop(time+duration+.02);
+ o.onended=()=>{o.disconnect();g.disconnect()};
+}
+function scheduleMusic(){
+ if(!music.enabled||document.hidden||music.ctx.state!=="running")return;
+ const ctx=music.ctx,beat=60/112;
+ if(music.next<ctx.currentTime)music.next=ctx.currentTime+.04;
+ const roots=[48,48,53,53,45,45,55,55],melody=[72,0,76,79,0,76,74,0,72,76,79,84,79,0,76,74];
+ while(music.next<ctx.currentTime+.15){
+  const s=music.step%64,bar=Math.floor(s/8),root=roots[bar],t=music.next;
+  if(s%2===0)musicNote(root-12+(s%8===6?7:0),t,.22,"triangle",.22);
+  if(s%8===0)[root,root+4,root+7].forEach(n=>musicNote(n,t,beat*1.6,"triangle",.055));
+  const note=melody[s%16];if(note)musicNote(note+root-48,t,.18,"triangle",.095);
+  // Soft synthesized kick and off-beat percussion.
+  if(s%4===0)musicNote(30,t,.13,"sine",.32);
+  if(s%4===2)musicNote(78,t,.045,"triangle",.08);
+  music.step++;music.next+=beat/2;
+ }
+}
+async function startMusic(){
+ if(!music.enabled||document.hidden)return;
+ try{
+  if(!music.ctx){const Audio=window.AudioContext||window.webkitAudioContext;music.ctx=new Audio();music.bus=music.ctx.createGain();music.bus.connect(music.ctx.destination)}
+  await music.ctx.resume();
+  if(!music.enabled||document.hidden)return;
+  music.bus.gain.setValueAtTime(music.volume,music.ctx.currentTime);
+  if(music.timer===null){music.next=music.ctx.currentTime+.04;music.timer=setInterval(scheduleMusic,50);scheduleMusic()}
+  $("musicStatus").textContent="Stadium instrumental playing.";musicUI();
+ }catch(e){$("musicStatus").textContent="Music could not start. Tap MUSIC to retry."}
+}
+function pauseMusic(){
+ if(music.timer!==null)clearInterval(music.timer);music.timer=null;
+ if(music.ctx){music.bus.gain.setValueAtTime(0,music.ctx.currentTime);music.ctx.suspend().catch(()=>{})}
+ musicUI();
+}
+$("musicToggle").addEventListener("click",()=>{
+ if(music.enabled&&music.timer!==null){music.enabled=false;pauseMusic();$("musicStatus").textContent="Music off."}
+ else{music.enabled=true;startMusic()}saveMusic();musicUI();
+});
+$("musicVolume").addEventListener("input",()=>{music.volume=Number($("musicVolume").value)/100;if(music.bus)music.bus.gain.setValueAtTime(music.volume,music.ctx.currentTime);saveMusic()});
+document.addEventListener("visibilitychange",()=>{if(document.hidden){pauseMusic();$("musicStatus").textContent="Music paused."}else if(music.ctx&&music.enabled)startMusic()});
+window.addEventListener("pagehide",pauseMusic);
+musicUI();
 function tone(freq=440,dur=.08,type="sine",gain=.035){
  try{
   const A=window.AudioContext||window.webkitAudioContext,ctx=tone.ctx||(tone.ctx=new A());
@@ -390,6 +454,7 @@ function advanceDrive(winAmount){
  }
 }
 async function spin(){
+ startMusic();
  if(busy)return;busy=true;$("spin").disabled=true;lastWin=0;
  if(freeSpins>0){freeSpins--;statusEl.textContent="Free spin — offense on the field!"}
  else{
